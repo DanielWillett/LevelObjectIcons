@@ -2,8 +2,11 @@
 
 *This was originally a part of [DevkitServer](https://github.com/DanielWillett/DevkitServer) and has been ported to a standalone module.*
 
-
+### Object Preview
 ![Features](https://github.com/DanielWillett/LevelObjectIcons/assets/12886600/46487de4-61cc-4497-b5dc-3a5a1dbbbe88)
+
+### Live Editor
+![editor](https://github.com/DanielWillett/LevelObjectIcons/assets/12886600/8584b2bd-3390-40b7-ad54-844708a48eee)
 
 # Installation
 * Download and extract the latest standalone module from [Releases](https://github.com/DanielWillett/LevelObjectIcons/releases/) into your `Unturned/Modules` folder.
