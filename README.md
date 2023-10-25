@@ -2,6 +2,9 @@
 
 *This was originally a part of [DevkitServer](https://github.com/DanielWillett/DevkitServer) and has been ported to a standalone module.*
 
+![Untitled-1](https://github.com/DanielWillett/LevelObjectIcons/assets/12886600/32b8320b-3a92-40f0-a236-29d2b5a96e78)
+
+
 # Installation
 * Download and extract the latest standalone module from [Releases](https://github.com/DanielWillett/LevelObjectIcons/releases/) into your `Unturned/Modules` folder.
 * Download the latest **standalone module** from the [latest release](https://github.com/DanielWillett/UnturnedUITools/releases/) of my UI utility library, [UnturnedUITools](https://github.com/DanielWillett/UnturnedUITools), and extract this into your `Unturned/Modules` folder.
@@ -13,9 +16,12 @@
 * Cycle through all of the material options in the default material palette (if set).
 * Edit object icons in-game for any objects.
 * Objects without custom icons are automatically lined up for any object.
-  * The front is assumed to be the -Z face of the object when at a euler rotation of `(-90, 0, 0)` (this is the default for most objects in-game, which is why it was chosen).<br>
+  * The front is assumed to be the -Z face of the object when at a Euler rotation of `(-90, 0, 0)` (this is the default for most objects in-game, which is why it was chosen).<br>
 * All vanilla objects have icon camera transform overrides (when necessary).
 * Any mod can easily add their own offsets directly to their Bundles folder.
+* Preview the text in notes without placing them.
+* Default icons for notes, flags, billboards, decals, and NPCs that will update automatically if a new one is added later on.
+* Modules can add their own default icon provider by implementing the `IDefaultIconProvider` interface.
 
 # Configuration
 There are two config files.
