@@ -2,8 +2,8 @@
 
 *This was originally a part of [DevkitServer](https://github.com/DanielWillett/DevkitServer) and has been ported to a standalone module.*
 
-![Untitled-1](https://github.com/DanielWillett/LevelObjectIcons/assets/12886600/32b8320b-3a92-40f0-a236-29d2b5a96e78)
 
+![Features](https://github.com/DanielWillett/LevelObjectIcons/assets/12886600/46487de4-61cc-4497-b5dc-3a5a1dbbbe88)
 
 # Installation
 * Download and extract the latest standalone module from [Releases](https://github.com/DanielWillett/LevelObjectIcons/releases/) into your `Unturned/Modules` folder.
