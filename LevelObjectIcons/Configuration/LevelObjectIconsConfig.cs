@@ -18,4 +18,7 @@ public class LevelObjectIconsConfig
 
     [JsonProperty("cycle_material_palette")]
     public bool ShouldCycleMaterialPalette { get; set; } = true;
+
+    [JsonProperty("debug_logging")]
+    public bool EnableDebugLogging { get; set; }
 }

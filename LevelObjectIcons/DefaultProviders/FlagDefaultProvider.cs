@@ -6,8 +6,8 @@ using UnityEngine;
 namespace DanielWillett.LevelObjectIcons.DefaultProviders;
 internal class FlagDefaultProvider : IDefaultIconProvider
 {
-    private static readonly Vector3 DefaultPosition = new Vector3(5.01f, 0.911f, 10.48f);
-    private static readonly Quaternion DefaultRotation = Quaternion.Euler(351.16f, 270f, 281.73f);
+    private static readonly Vector3 DefaultPosition = new Vector3(-4.95f, 1.97f, 10.74f);
+    private static readonly Quaternion DefaultRotation = Quaternion.Euler(0.71f, 92.61f, 77.94f);
 
     /// <inheritdoc/>
     public int Priority => int.MinValue;

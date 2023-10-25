@@ -40,6 +40,8 @@ public sealed class LevelObjectIconsNexus : IModuleNexus
 
     public static void SaveConfig()
     {
+        ObjectIconPresets.DebugLogging = Config.EnableDebugLogging;
+
         CheckConfig();
 
         _configObj!.SaveConfig();
@@ -49,6 +51,8 @@ public sealed class LevelObjectIconsNexus : IModuleNexus
         CheckConfig();
 
         _configObj!.ReloadConfig();
+
+        ObjectIconPresets.DebugLogging = Config.EnableDebugLogging;
     }
 
     public static void ReloadTranslations()
@@ -111,10 +115,6 @@ public sealed class LevelObjectIconsNexus : IModuleNexus
 
         ReloadConfig();
         ReloadTranslations();
-
-#if DEBUG
-        ObjectIconPresets.DebugLogging = true;
-#endif
 
         ObjectIconPresets.Init();
 

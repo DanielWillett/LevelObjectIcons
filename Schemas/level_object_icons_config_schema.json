@@ -676,6 +676,10 @@
     "cycle_material_palette": {
       "description": "Enables cycling between materials in the material palette. May cause some lag on lower end machines.",
       "type": "boolean"
+    },
+    "debug_logging": {
+      "description": "Enables extra logging to see what files are being used, etc.",
+      "type": "boolean"
     }
   }
 }

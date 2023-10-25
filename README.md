@@ -5,9 +5,6 @@
 ### Object Preview
 ![Features](https://github.com/DanielWillett/LevelObjectIcons/assets/12886600/46487de4-61cc-4497-b5dc-3a5a1dbbbe88)
 
-### Live Editor
-![editor](https://github.com/DanielWillett/LevelObjectIcons/assets/12886600/8584b2bd-3390-40b7-ad54-844708a48eee)
-
 # Installation
 * Download and extract the latest standalone module from [Releases](https://github.com/DanielWillett/LevelObjectIcons/releases/) into your `Unturned/Modules` folder.
 * Download the latest **standalone module** from the [latest release](https://github.com/DanielWillett/UnturnedUITools/releases/) of my UI utility library, [UnturnedUITools](https://github.com/DanielWillett/UnturnedUITools), and extract this into your `Unturned/Modules` folder.
@@ -33,6 +30,7 @@ Main settings file for the module with the following options:
 * `edit_keybind`: Key used to toggle the Live Editor checkbox. Default: `F8`
 * `log_mising_keybind`: Key used to print all objects that don't have an offset to Client.log. Default: `Keypad5`
 * `cycle_material_palette`: Enables cycling between materials in the material palette. This may cause some lag on lower-end machines. Default: `true`
+* `debug_logging`: Enables extra logging to see what files are being used, etc. Default: `false`
 
 Open in Visual Studio Code or another IDE that supports JSON schemas to get auto-complete.
 
@@ -58,6 +56,9 @@ Position your camera so the preview looks how you want the icon, then either hit
 **Save New** saves to (or updates if theres already an icon preset there) the custom icon file: `<Module Folder>\configured_icons.json`, where they can be copied into your mod or plugin.
 
 **Save** looks for a non-readonly file with an icon preset for that asset and saves there, otherwise it saves to the same place as **Save New**.
+
+### In-Game Editor
+![editor](https://github.com/DanielWillett/LevelObjectIcons/assets/12886600/8584b2bd-3390-40b7-ad54-844708a48eee)
 
 
 ### Read Locations
