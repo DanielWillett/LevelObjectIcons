@@ -2,10 +2,33 @@
 
 *This was originally a part of [DevkitServer](https://github.com/DanielWillett/DevkitServer) and has been ported to a standalone module.*
 
-Object icons are automatically lined up for any object based on the bounds of the colliders.<br>
-The front is assumed to be the -Z face of the object when at a euler rotation of `(-90, 0, 0)` (this is the default for most objects in-game, which is why it was chosen).<br>
+# Installation
+* Download and extract the latest standalone module from [Releases](https://github.com/DanielWillett/LevelObjectIcons/releases/) into your `Unturned/Modules` folder.
+* Download the latest **standalone module** from the [latest release](https://github.com/DanielWillett/UnturnedUITools/releases/) of my UI utility library, [UnturnedUITools](https://github.com/DanielWillett/UnturnedUITools), and extract this into your `Unturned/Modules` folder.
+* Edit the configuration file if desired (see below).
+* Launch without *BattlEye* so the module loads.
 
-Most vanilla objects have icon camera transform overrides (when necessary).
+# Features
+* View objects, NPCs, and decals without placing them.
+* Cycle through all of the material options in the default material palette (if set).
+* Edit object icons in-game for any objects.
+* Objects without custom icons are automatically lined up for any object.
+  * The front is assumed to be the -Z face of the object when at a euler rotation of `(-90, 0, 0)` (this is the default for most objects in-game, which is why it was chosen).<br>
+* All vanilla objects have icon camera transform overrides (when necessary).
+* Any mod can easily add their own offsets directly to their Bundles folder.
+
+# Configuration
+There are two config files.
+## `level_object_icons_config.json`
+Main settings file for the module with the following options:
+* `edit_keybind`: Key used to toggle the Live Editor checkbox. Default: `F8`
+* `log_mising_keybind`: Key used to print all objects that don't have an offset to Client.log. Default: `Keypad5`
+* `cycle_material_palette`: Enables cycling between materials in the material palette. This may cause some lag on lower-end machines. Default: `true`
+
+Open in Visual Studio Code or another IDE that supports JSON schemas to get auto-complete.
+
+## Localization
+Change translation values for UIs and add a language here. `English.dat` has the default values but you can add your own language if desired, similar to how vanilla localization files work.
 
 # Implementing custom overrides for your mod
 
