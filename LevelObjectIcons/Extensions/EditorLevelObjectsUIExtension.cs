@@ -337,6 +337,10 @@ internal class EditorLevelObjectsUIExtension : UIExtension, IDisposable
             return;
         }
 
+        bool editing = ObjectIconPresets.ActivelyEditing != null && ObjectIconPresets.ActivelyEditing.Object == target.GUID;
+        if (editing)
+            ObjectIconPresets.ClearEditCache();
+        
         IconGenerator.ObjectIconMetrics metrics = IconGenerator.GetObjectIconMetrics(asset);
         IconGenerator.GetCameraPositionAndRotation(in metrics, target.transform, out Vector3 position, out Quaternion rotation);
 
@@ -346,6 +350,9 @@ internal class EditorLevelObjectsUIExtension : UIExtension, IDisposable
 
         SetYaw?.Invoke(euler.y);
         SetPitch?.Invoke(Mathf.Clamp(euler.x, -90f, 90f));
+
+        if (editing)
+            ObjectIconPresets.UpdateEditCache(target, target.asset);
     }
 
     private void OnToggled(ISleekToggle toggle, bool state)
@@ -601,6 +608,9 @@ internal class EditorLevelObjectsUIExtension : UIExtension, IDisposable
         List<ObjectAsset> objects = new List<ObjectAsset>(4096);
         Assets.find(objects);
 
+        string sboxPath = Path.Combine(UnturnedPaths.RootDirectory.FullName, "Sandbox") + Path.DirectorySeparatorChar;
+        string mapPath = Path.Combine(UnturnedPaths.RootDirectory.FullName, "Maps") + Path.DirectorySeparatorChar;
+
         ulong lastMod = ulong.MaxValue;
         foreach (ObjectAsset obj in objects
                      .Where(x => x.type is not EObjectType.DECAL and not EObjectType.NPC)
@@ -613,10 +623,12 @@ internal class EditorLevelObjectsUIExtension : UIExtension, IDisposable
             AssetOrigin? assetOrigin = GetAssetOrigin?.Invoke(obj);
             ulong modId = assetOrigin?.workshopFileId ?? 0ul;
 
-            string path = obj.getFilePath();
+            string path = Path.GetFullPath(obj.getFilePath());
 
-            if (modId == 0ul && path.IndexOf("/Sandbox/", StringComparison.Ordinal) != -1)
+            if (modId == 0ul && path.IndexOf(sboxPath, StringComparison.Ordinal) != -1)
                 modId = 1ul;
+            else if (modId == 0ul && path.IndexOf(mapPath, StringComparison.Ordinal) != -1)
+                modId = 2ul;
 
             if (modId != lastMod)
             {
@@ -631,6 +643,11 @@ internal class EditorLevelObjectsUIExtension : UIExtension, IDisposable
                 else if (modId == 1ul)
                 {
                     modName = "Sandbox Content";
+                    CommandWindow.Log($"=== {modName} ===");
+                }
+                else if (modId == 2ul)
+                {
+                    modName = "Map Bundles";
                     CommandWindow.Log($"=== {modName} ===");
                 }
                 else
@@ -650,8 +667,12 @@ internal class EditorLevelObjectsUIExtension : UIExtension, IDisposable
                 }
             }
 
-            if (modId is 0ul or 1ul)
-                path = path.Replace(UnturnedPaths.RootDirectory.FullName, string.Empty);
+            if (modId == 0ul)
+                path = path.Replace(UnturnedPaths.RootDirectory.FullName + Path.DirectorySeparatorChar, string.Empty);
+            else if (modId == 1ul)
+                path = path.Replace(sboxPath, string.Empty);
+            else if (modId == 2ul)
+                path = path.Replace(mapPath, string.Empty);
             else
             {
                 SteamContent? ugc = Provider.provider?.workshopService?.ugc?.Find(x => x.publishedFileID.m_PublishedFileId == modId);
@@ -659,7 +680,7 @@ internal class EditorLevelObjectsUIExtension : UIExtension, IDisposable
                     path = path.Replace(Path.GetFullPath(ugc.path), string.Empty);
             }
 
-            CommandWindow.Log($"Missing Object: {obj.FriendlyName,-30} @ {path}");
+            CommandWindow.Log($"Missing Object: {obj.FriendlyName,-33} @ {path}");
         }
     }
 }
