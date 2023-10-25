@@ -3,7 +3,7 @@
 *This was originally a part of [DevkitServer](https://github.com/DanielWillett/DevkitServer) and has been ported to a standalone module.*
 
 ### Object Preview
-![Features](https://github.com/DanielWillett/LevelObjectIcons/assets/12886600/46487de4-61cc-4497-b5dc-3a5a1dbbbe88)
+![Features](https://github.com/DanielWillett/LevelObjectIcons/assets/12886600/682d16b8-ece3-41ab-ad15-584911cf39ea)
 
 # Installation
 * Download and extract the latest standalone module from [Releases](https://github.com/DanielWillett/LevelObjectIcons/releases/) into your `Unturned/Modules` folder.
