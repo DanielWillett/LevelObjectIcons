@@ -48,7 +48,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DanielWillett.UnturnedUITools" Version="1.1.1" />
+    <PackageReference Include="DanielWillett.UnturnedUITools" Version="[1.1.1,)" />
   </ItemGroup>
 
   <ItemGroup>
