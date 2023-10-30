@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using DanielWillett.UITools;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -112,6 +113,7 @@ public sealed class LevelObjectIconsNexus : IModuleNexus
         {
             hideFlags = HideFlags.DontSave
         };
+        UnityEngine.Object.DontDestroyOnLoad(GameObjectHost);
 
         ReloadConfig();
         ReloadTranslations();
@@ -123,7 +125,17 @@ public sealed class LevelObjectIconsNexus : IModuleNexus
         objectItemGeneratorHost.hideFlags = HideFlags.DontSave;
 
         CommandWindow.Log("Done loading LevelObjectIcons.");
+
+        ModuleHook.onModulesInitialized += OnModulesInit;
     }
+
+    private void OnModulesInit()
+    {
+        ModuleHook.onModulesInitialized -= OnModulesInit;
+
+        UnturnedUIToolsNexus.InitializeIfNotStandalone();
+    }
+
     void IModuleNexus.shutdown()
     {
         CommandWindow.Log("Unloading LevelObjectIcons module...");
