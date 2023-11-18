@@ -3,7 +3,7 @@
 *This was originally a part of [DevkitServer](https://github.com/DanielWillett/DevkitServer) and has been ported to a standalone module.*
 
 ### Object Preview
-![Features](https://github.com/DanielWillett/LevelObjectIcons/assets/12886600/682d16b8-ece3-41ab-ad15-584911cf39ea)
+![Features](https://i.imgur.com/uxSm4qF.png)
 
 # Installation
 * Download and extract the latest standalone module from [Releases](https://github.com/DanielWillett/LevelObjectIcons/releases/) into your `Unturned/Modules` folder.
@@ -59,7 +59,7 @@ Position your camera so the preview looks how you want the icon, then either hit
 **Save** looks for a non-readonly file with an icon preset for that asset and saves there, otherwise it saves to the same place as **Save New**.
 
 ### In-Game Editor
-![editor](https://github.com/DanielWillett/LevelObjectIcons/assets/12886600/8584b2bd-3390-40b7-ad54-844708a48eee)
+![editor](https://i.imgur.com/CaTgpiA.png)
 
 
 ### Read Locations
