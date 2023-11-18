@@ -11,7 +11,7 @@
 
     <PackageId>DanielWillett.LevelObjectIcons</PackageId>
     <Title>Unturned Glazier UI Tools</Title>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <Authors>Daniel Willett</Authors>
     <Product>DanielWillett.LevelObjectIcons</Product>
     <Description>LevelObject icon renderer for the Unturned Map Editor.</Description>
