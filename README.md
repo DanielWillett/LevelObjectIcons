@@ -31,6 +31,7 @@ Main settings file for the module with the following options:
 * `log_mising_keybind`: Key used to print all objects that don't have an offset to Client.log. Default: `Keypad5`
 * `cycle_material_palette`: Enables cycling between materials in the material palette. This may cause some lag on lower-end machines. Default: `true`
 * `debug_logging`: Enables extra logging to see what files are being used, etc. Default: `false`
+* `disable_default_provider_search`: Disables searching other modules for default icon providers. Set this to `true` if errors arise from `ApplyDefaultProviders`. Default: `false`
 
 Open in Visual Studio Code or another IDE that supports JSON schemas to get auto-complete.
 

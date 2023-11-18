@@ -7,6 +7,7 @@ using SDG.Framework.Modules;
 using SDG.Unturned;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -15,12 +16,16 @@ using UnityEngine;
 using Module = SDG.Framework.Modules.Module;
 
 namespace DanielWillett.LevelObjectIcons;
-internal static class ObjectIconPresets
+
+/// <summary>
+/// Storage provider for object icon presets.
+/// </summary>
+public static class ObjectIconPresets
 {
     private static readonly List<JsonConfigurationFile<List<AssetIconPreset>>> _presetProviders = new List<JsonConfigurationFile<List<AssetIconPreset>>>(1);
     private static JsonConfigurationFile<List<AssetIconPreset>>? _customPresets;
     private static readonly string _customPresetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "configured_icons.json");
-    public static Dictionary<Guid, AssetIconPreset> Presets = new Dictionary<Guid, AssetIconPreset>(128);
+    private static readonly Dictionary<Guid, AssetIconPreset> _presetsIntl = new Dictionary<Guid, AssetIconPreset>(128);
 
     private static readonly List<AssetIconPreset> DefaultPresets = new List<AssetIconPreset>(128);
 
@@ -28,8 +33,21 @@ internal static class ObjectIconPresets
     /// The default rotation an object is placed at.
     /// </summary>
     public static readonly Quaternion DefaultObjectRotation = Quaternion.Euler(-90f, 0.0f, 0.0f);
+
+    /// <summary>
+    /// The current asset icon being edited.
+    /// </summary>
     public static AssetIconPreset? ActivelyEditing { get; private set; }
+
+    /// <summary>
+    /// Static switch for debug logging. Can be overwritten by config.
+    /// </summary>
     public static bool DebugLogging { get; set; }
+
+    /// <summary>
+    /// A map of object GUIDs to the highest priority <see cref="AssetIconPreset"/>s.
+    /// </summary>
+    public static IReadOnlyDictionary<Guid, AssetIconPreset> ActivePresets { get; } = new ReadOnlyDictionary<Guid, AssetIconPreset>(_presetsIntl);
 
     private static readonly JsonSerializerSettings JsonSettings = new JsonSerializerSettings
     {
@@ -37,11 +55,11 @@ internal static class ObjectIconPresets
         Culture = CultureInfo.InvariantCulture
     };
 
-    public static void Init()
+    internal static void Init()
     {
         Level.onPostLevelLoaded += OnLevelLoaded;
     }
-    public static void Deinit()
+    internal static void Deinit()
     {
         Level.onPostLevelLoaded += OnLevelLoaded;
     }
@@ -69,7 +87,7 @@ internal static class ObjectIconPresets
 
         IconGenerator.ClearCache(asset.GUID);
     }
-    public static void SaveEditCache(bool asNew)
+    internal static void SaveEditCache(bool asNew)
     {
         AssetIconPreset? preset = ActivelyEditing;
         if (preset == null)
@@ -112,7 +130,7 @@ internal static class ObjectIconPresets
             if (!contains)
                 _customPresets.Configuration.Add(existing);
             _customPresets.SaveConfig();
-            Presets[guid] = existing;
+            _presetsIntl[guid] = existing;
 
             CommandWindow.Log($"Updated asset icon preset: {preset.Object}, saved to {_customPresets.File}.");
         }
@@ -143,13 +161,13 @@ internal static class ObjectIconPresets
             kvp.Value.IconPosition = preset.IconPosition;
             kvp.Value.IconRotation = preset.IconRotation;
             kvp.Key.SaveConfig();
-            Presets[guid] = kvp.Value;
+            _presetsIntl[guid] = kvp.Value;
             CommandWindow.Log($"Updated asset icon preset: {preset.Object}, saved to {kvp.Key.File}.");
         }
 
         ClearEditCache();
     }
-    public static void ClearEditCache()
+    internal static void ClearEditCache()
     {
         if (ActivelyEditing == null)
             return;
@@ -165,7 +183,7 @@ internal static class ObjectIconPresets
         ReloadPresetProviders();
     }
 
-    public static void ReloadPresetProviders()
+    internal static void ReloadPresetProviders()
     {
         ThreadUtil.assertIsGameThread();
 
@@ -245,7 +263,7 @@ internal static class ObjectIconPresets
                 CommandWindow.Log($"[{IconGenerator.Source}] + Registered working icon provider {path}.");
         }
 
-        Presets.Clear();
+        _presetsIntl.Clear();
 
         ApplyDefaultProviders();
 
@@ -254,7 +272,7 @@ internal static class ObjectIconPresets
         foreach (AssetIconPreset preset in DefaultPresets)
         {
             preset.File = null;
-            Presets[preset.Object] = preset;
+            _presetsIntl[preset.Object] = preset;
         }
 
         for (int i = _presetProviders.Count - 1; i >= 0; i--)
@@ -280,12 +298,12 @@ internal static class ObjectIconPresets
                     continue;
                 }
                 preset.File = configFile.File;
-                if (!Presets.TryGetValue(preset.Object, out AssetIconPreset existing) || existing.Priority < preset.Priority)
-                    Presets[preset.Object] = preset;
+                if (!_presetsIntl.TryGetValue(preset.Object, out AssetIconPreset existing) || existing.Priority < preset.Priority)
+                    _presetsIntl[preset.Object] = preset;
             }
         }
 
-        CommandWindow.Log($"[{IconGenerator.Source}] {(DebugLogging ? "+ " : string.Empty)}Registered {Presets.Count} unique icon presets from {ct} presets.");
+        CommandWindow.Log($"[{IconGenerator.Source}] {(DebugLogging ? "+ " : string.Empty)}Registered {_presetsIntl.Count} unique icon presets from {ct} presets.");
 
         GC.Collect();
     }
@@ -321,13 +339,28 @@ internal static class ObjectIconPresets
     }
     private static void ApplyDefaultProviders()
     {
+        IEnumerable<Type> types;
+
+        if (LevelObjectIconsNexus.Config.DisableDefaultProviderSearch)
+            types = Accessor.GetTypesSafe(true);
+        else
+            types = Accessor.GetTypesSafe(ModuleHook.modules.Where(x => x.assemblies != null).SelectMany(x => x.assemblies));
+        
         List<IDefaultIconProvider> providers = new List<IDefaultIconProvider>(2);
-        foreach (Type type in Accessor.GetTypesSafe(
-                     ModuleHook.modules
-                         .Where(x => x.assemblies != null)
-                         .SelectMany(x => x.assemblies))
-                     .Where(x => x is { IsInterface: false, IsAbstract: false } && typeof(IDefaultIconProvider).IsAssignableFrom(x)))
+        foreach (Type type in types.Where(x => x is { IsInterface: false, IsAbstract: false }))
         {
+            try
+            {
+                if (!typeof(IDefaultIconProvider).IsAssignableFrom(type))
+                    continue;
+            }
+            catch (Exception ex)
+            {
+                if (DebugLogging)
+                    CommandWindow.Log($"[{IconGenerator.Source}] - Failed to check type: {type.FullName} ({ex.GetType().Name} - {ex.Message}).");
+                continue;
+            }
+
             try
             {
                 IDefaultIconProvider provider = (IDefaultIconProvider)Activator.CreateInstance(type);
@@ -335,7 +368,7 @@ internal static class ObjectIconPresets
             }
             catch (Exception ex)
             {
-                CommandWindow.LogError($"Unable to apply icon provider: {type.FullName}.");
+                CommandWindow.LogError($"[{IconGenerator.Source}] + Unable to apply icon provider: {type.FullName}.");
                 CommandWindow.LogError(ex);
             }
         }

@@ -680,6 +680,10 @@
     "debug_logging": {
       "description": "Enables extra logging to see what files are being used, etc.",
       "type": "boolean"
+    },
+    "disable_default_provider_search": {
+      "description": "Disables searching other modules for default icon providers. Set this to true if errors arise from ApplyDefaultProviders.",
+      "type": "boolean"
     }
   }
 }

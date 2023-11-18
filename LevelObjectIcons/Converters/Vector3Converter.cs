@@ -4,9 +4,11 @@ using System.Globalization;
 using UnityEngine;
 
 namespace DanielWillett.LevelObjectIcons.Converters;
+/// <inheritdoc />
 public class Vector3Converter : JsonConverter
 {
     private static readonly char[] SplitChars = { ',' };
+    /// <inheritdoc />
     public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
     {
         Vector3 v3 = (Vector3)value;
@@ -22,6 +24,7 @@ public class Vector3Converter : JsonConverter
 
         writer.Formatting = originalFormatting;
     }
+    /// <inheritdoc />
     public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
     {
         float x = 0f, y = 0f, z = 0f;
@@ -112,5 +115,6 @@ public class Vector3Converter : JsonConverter
         return new Vector3(x, y, z);
     }
 
+    /// <inheritdoc />
     public override bool CanConvert(Type objectType) => objectType == typeof(Vector3);
 }

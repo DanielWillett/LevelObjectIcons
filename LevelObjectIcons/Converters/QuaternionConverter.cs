@@ -4,18 +4,26 @@ using System.Globalization;
 using UnityEngine;
 
 namespace DanielWillett.LevelObjectIcons.Converters;
+
+/// <inheritdoc />
 public class QuaternionEulerConverter : QuaternionConverter
 {
+    /// <inheritdoc />
     public QuaternionEulerConverter()
     {
         WriteEuler = true;
     }
 }
 
+/// <inheritdoc />
 public class QuaternionConverter : JsonConverter
 {
+    /// <summary>
+    /// Write the values in Euler form instead of Quaternion.
+    /// </summary>
     protected bool WriteEuler;
     private static readonly char[] SplitChars = { ',' };
+    /// <inheritdoc />
     public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
     {
         Quaternion quaternion = (Quaternion)value;
@@ -42,6 +50,7 @@ public class QuaternionConverter : JsonConverter
 
         writer.Formatting = originalFormatting;
     }
+    /// <inheritdoc />
     public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
     {
         float x = 0f, y = 0f, z = 0f, w = 0f;
@@ -154,5 +163,6 @@ public class QuaternionConverter : JsonConverter
         return euler ? Quaternion.Euler(x, y, z) : new Quaternion(x, y, z, w);
     }
 
+    /// <inheritdoc />
     public override bool CanConvert(Type objectType) => objectType == typeof(Quaternion);
 }

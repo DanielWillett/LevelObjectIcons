@@ -10,12 +10,26 @@ using GraphicsSettings = SDG.Unturned.GraphicsSettings;
 using Random = UnityEngine.Random;
 
 namespace DanielWillett.LevelObjectIcons;
+/// <summary>
+/// Component to generate object icons.
+/// </summary>
 public sealed class IconGenerator : MonoBehaviour
 {
     internal const string Source = "OBJECT ICONS";
 
+    /// <summary>
+    /// Camera FOV for creating icons.
+    /// </summary>
     public const float FOV = 60f;
+
+    /// <summary>
+    /// Distance multiplier for calculating camera position automatically.
+    /// </summary>
     public const float DistanceScale = 1;
+
+    /// <summary>
+    /// How much distance effects the far clip plane (how far the camera can see).
+    /// </summary>
     public const float FarClipPlaneScale = 2.25f;
     private static readonly Vector3 EulerDefaultCameraRotation = new Vector3(5.298f, -23.733f, 0f);
     private static readonly Quaternion DefaultCameraRotation = Quaternion.Euler(EulerDefaultCameraRotation);
@@ -23,7 +37,12 @@ public sealed class IconGenerator : MonoBehaviour
     private static readonly List<Renderer> WorkingRenderersList = new List<Renderer>(4);
     private Camera _camera = null!;
     private Light _light = null!;
+
+    /// <summary>
+    /// Singleton instance of <see cref="IconGenerator"/>.
+    /// </summary>
     public static IconGenerator? Instance { get; private set; }
+
     [UsedImplicitly]
     private void Start()
     {
@@ -43,8 +62,21 @@ public sealed class IconGenerator : MonoBehaviour
 
         Instance = this;
     }
+
+    /// <summary>
+    /// Clear the icon metrics cache.
+    /// </summary>
     public static void ClearCache() => Metrics.Clear();
+
+    /// <summary>
+    /// Clear the icon metrics cache of a specific object.
+    /// </summary>
     public static void ClearCache(Guid guid) => Metrics.Remove(guid);
+
+    /// <summary>
+    /// Start creating an icon for <paramref name="asset"/>.
+    /// </summary>
+    /// <remarks><paramref name="onIconReady"/> will be called when it's ready (or if the icon fails somehow).</remarks>
     public static void GetIcon(Asset asset, int width, int height, ObjectRenderOptions? options, Action<Asset, Texture2D?, bool, ObjectRenderOptions?> onIconReady)
     {
         ThreadUtil.assertIsGameThread();
@@ -165,6 +197,10 @@ public sealed class IconGenerator : MonoBehaviour
             WorkingRenderersList.Clear();
         }
     }
+
+    /// <summary>
+    /// Calculate camera position based on object metrics.
+    /// </summary>
     public static void GetCameraPositionAndRotation(in ObjectIconMetrics metrics, Transform target, out Vector3 position, out Quaternion rotation)
     {
         position = metrics.CameraPosition;
@@ -246,6 +282,10 @@ public sealed class IconGenerator : MonoBehaviour
         _light.enabled = false;
         return outTexture;
     }
+
+    /// <summary>
+    /// Calculate or find icon metrics of a given asset.
+    /// </summary>
     public static ObjectIconMetrics GetObjectIconMetrics(Asset asset)
     {
         ThreadUtil.assertIsGameThread();
@@ -264,7 +304,7 @@ public sealed class IconGenerator : MonoBehaviour
         AssetIconPreset? preset = ObjectIconPresets.ActivelyEditing;
 
         if (preset == null || preset.Object != asset.GUID)
-            ObjectIconPresets.Presets.TryGetValue(asset.GUID, out preset);
+            ObjectIconPresets.ActivePresets.TryGetValue(asset.GUID, out preset);
         
         if (preset != null)
         {
@@ -305,6 +345,10 @@ public sealed class IconGenerator : MonoBehaviour
         Metrics.Add(asset.GUID, metrics);
         return metrics;
     }
+
+    /// <summary>
+    /// Calculate extents (bounds) of a given object.
+    /// </summary>
     public static bool TryGetExtents(GameObject obj, out Bounds bounds)
     {
         ThreadUtil.assertIsGameThread();
@@ -365,14 +409,45 @@ public sealed class IconGenerator : MonoBehaviour
             RenderSettings.ambientGroundColor = _groundColor;
         }
     }
-    public struct ObjectIconMetrics
+
+    /// <summary>
+    /// Defines the position and rotation offsets of the capture camera for an icon.
+    /// </summary>
+    public readonly struct ObjectIconMetrics
     {
+        /// <summary>
+        /// Camera's position offset from the object.
+        /// </summary>
         public Vector3 CameraPosition { get; }
+
+        /// <summary>
+        /// Target object's position offset from the origin.
+        /// </summary>
         public Vector3 ObjectPositionOffset { get; }
+
+        /// <summary>
+        /// Camera's rotation offset from the object.
+        /// </summary>
         public Quaternion CameraRotation { get; }
+
+        /// <summary>
+        /// If these measurements were defined explicitly instead of caluclated automatically.
+        /// </summary>
         public bool IsCustom { get; }
+
+        /// <summary>
+        /// Max 'radius' of the object, only present in automatically calculated metrics.
+        /// </summary>
         public float ObjectSize { get; }
+        
+        /// <summary>
+        /// Far clip plane of the capture camera, meaning the max distance it can see.
+        /// </summary>
         public float FarClipPlane { get; }
+
+        /// <summary>
+        /// Define new metrics for creating an object icon.
+        /// </summary>
         public ObjectIconMetrics(Vector3 cameraPosition, Vector3 objectPositionOffset, Quaternion cameraRotation, float objectSize, float farClipPlane, bool isCustom)
         {
             CameraPosition = cameraPosition;
@@ -381,21 +456,6 @@ public sealed class IconGenerator : MonoBehaviour
             IsCustom = isCustom;
             ObjectSize = objectSize;
             FarClipPlane = farClipPlane;
-        }
-    }
-
-    public struct ObjectIconRequestInfo
-    {
-        public Asset Asset { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
-        public AssetReference<MaterialPaletteAsset> Material { get; set; } = AssetReference<MaterialPaletteAsset>.invalid;
-        public int MaterialIndexOverride { get; set; } = -1;
-        public ObjectIconRequestInfo(Asset asset)
-        {
-            Asset = asset;
-            Width = 128;
-            Height = 128;
         }
     }
 }

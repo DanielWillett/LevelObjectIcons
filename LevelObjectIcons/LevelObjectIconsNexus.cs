@@ -1,5 +1,7 @@
 ﻿using DanielWillett.LevelObjectIcons.Configuration;
+using DanielWillett.UITools;
 using HarmonyLib;
+using Newtonsoft.Json;
 using SDG.Framework.Modules;
 using SDG.Unturned;
 using System;
@@ -7,12 +9,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
-using DanielWillett.UITools;
-using Newtonsoft.Json;
 using UnityEngine;
 
 namespace DanielWillett.LevelObjectIcons;
 
+/// <summary>
+/// Module nexus for the Level Object Icons module.
+/// </summary>
 public sealed class LevelObjectIconsNexus : IModuleNexus
 {
     private static JsonConfigurationFile<LevelObjectIconsConfig>? _configObj;
@@ -34,11 +37,29 @@ public sealed class LevelObjectIconsNexus : IModuleNexus
         { "ObjectIconEditorOffsetAssetButton", new DatValue("Go"               ) }
     };
 
+    /// <summary>
+    /// Localization data for the current language.
+    /// </summary>
     public static Local Localization = new Local(DefaultLocal);
+
+    /// <summary>
+    /// Configuration instance for <see cref="LevelObjectIconsNexus"/>.
+    /// </summary>
     public static LevelObjectIconsConfig Config => _configObj?.Configuration ?? new LevelObjectIconsConfig();
+
+    /// <summary>
+    /// Patcher instance for LevelObjectIcons.
+    /// </summary>
     public static Harmony Patcher { get; } = new Harmony("DanielWillett.LevelObjectIcons");
+
+    /// <summary>
+    /// Host game object which has the <see cref="IconGenerator"/> component attached.
+    /// </summary>
     public static GameObject? GameObjectHost { get; private set; }
 
+    /// <summary>
+    /// Save <see cref="Config"/> to file.
+    /// </summary>
     public static void SaveConfig()
     {
         ObjectIconPresets.DebugLogging = Config.EnableDebugLogging;
@@ -47,6 +68,10 @@ public sealed class LevelObjectIconsNexus : IModuleNexus
 
         _configObj!.SaveConfig();
     }
+
+    /// <summary>
+    /// Read <see cref="Config"/> from file.
+    /// </summary>
     public static void ReloadConfig()
     {
         CheckConfig();
@@ -56,6 +81,9 @@ public sealed class LevelObjectIconsNexus : IModuleNexus
         ObjectIconPresets.DebugLogging = Config.EnableDebugLogging;
     }
 
+    /// <summary>
+    /// Read <see cref="Localization"/> from file.
+    /// </summary>
     public static void ReloadTranslations()
     {
         try

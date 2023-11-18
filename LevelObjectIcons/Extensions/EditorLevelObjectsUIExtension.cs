@@ -617,7 +617,7 @@ internal class EditorLevelObjectsUIExtension : UIExtension, IDisposable
                      .OrderByDescending(x => GetAssetOrigin?.Invoke(x)?.workshopFileId ?? 0ul)
                      .ThenBy(x => x.getFilePath()))
         {
-            if (ObjectIconPresets.Presets.ContainsKey(obj.GUID))
+            if (ObjectIconPresets.ActivePresets.ContainsKey(obj.GUID))
                 continue;
 
             AssetOrigin? assetOrigin = GetAssetOrigin?.Invoke(obj);

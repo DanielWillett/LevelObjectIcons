@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2AEECFDF-646F-4DFA-85A7-D81698CA0211}"
 	ProjectSection(SolutionItems) = preProject
 		Schemas\level_object_icons_config_schema.json = Schemas\level_object_icons_config_schema.json
+		Icons\Object Icon Presets - Vanilla.json = Icons\Object Icon Presets - Vanilla.json
 		README.md = README.md
 	EndProjectSection
 EndProject

@@ -9,14 +9,26 @@ using Action = System.Action;
 
 namespace DanielWillett.LevelObjectIcons.Configuration;
 
+/// <summary>
+/// Represents a JSON file's config.
+/// </summary>
+/// <typeparam name="TConfig"></typeparam>
 public class JsonConfigurationFile<TConfig> where TConfig : class, new()
 {
     /// <summary>
     /// Any edits done during this event will be written.
     /// </summary>
     public event Action? OnRead;
+
+    /// <summary>
+    /// Gets the default value of the config. Recommended to not use a backing field.
+    /// </summary>
     [JsonIgnore]
     public virtual TConfig? Default => null;
+
+    /// <summary>
+    /// Most recently read configuration value.
+    /// </summary>
     [JsonIgnore]
     public TConfig Configuration
     {
@@ -38,8 +50,16 @@ public class JsonConfigurationFile<TConfig> where TConfig : class, new()
     private readonly object _sync = new object();
     [JsonIgnore]
     private string _file = null!;
+
+    /// <summary>
+    /// <see cref="JsonSerializerSettings"/> to use when reading and writing the config.
+    /// </summary>
     [JsonIgnore]
     public JsonSerializerSettings? SerializerOptions { get; set; }
+
+    /// <summary>
+    /// File path of the JSON file.
+    /// </summary>
     [JsonIgnore]
     public string File
     {
@@ -52,15 +72,28 @@ public class JsonConfigurationFile<TConfig> where TConfig : class, new()
             }
         }
     }
+
     /// <summary>
     /// Tells reloading to not make backups, copies, or save on read.
     /// </summary>
     public bool ReadOnlyReloading { get; set; }
+
+    /// <summary>
+    /// Creates a new config with the specified path. Does not read the file yet.
+    /// </summary>
     public JsonConfigurationFile(string file)
     {
         File = file;
     }
+
+    /// <summary>
+    /// Called when the file is re-read. Use to initialize or apply any setting changes.
+    /// </summary>
     protected virtual void OnReload() { }
+
+    /// <summary>
+    /// Read or re-read the config from <see cref="File"/> then write it if <see cref="ReadOnlyReloading"/> is <see langword="false"/>.
+    /// </summary>
     public void ReloadConfig()
     {
         lock (_sync)
@@ -83,6 +116,10 @@ public class JsonConfigurationFile<TConfig> where TConfig : class, new()
                 WriteToFile(File, _config);
         }
     }
+
+    /// <summary>
+    /// Write the config to <see cref="File"/>.
+    /// </summary>
     public void SaveConfig()
     {
         lock (_sync)
