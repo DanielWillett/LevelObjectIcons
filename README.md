@@ -5,9 +5,12 @@
 ### Object Preview
 ![Features](https://i.imgur.com/uxSm4qF.png)
 
+# Installation and Usage Guide
+[YouTube](https://youtu.be/bgBJCmkwR7I)
+
 # Installation
-* Download and extract the latest standalone module from [Releases](https://github.com/DanielWillett/LevelObjectIcons/releases/) into your `Unturned/Modules` folder.
-* Download the latest **standalone module** from the [latest release](https://github.com/DanielWillett/UnturnedUITools/releases/) of my UI utility library, [UnturnedUITools](https://github.com/DanielWillett/UnturnedUITools), and extract this into your `Unturned/Modules` folder.
+* Download and extract the latest module from [Releases](https://github.com/DanielWillett/LevelObjectIcons/releases/) into your `Unturned/Modules` folder.
+  * I recommend not using the standalone module in case any other modules use the UITools library, but both will work.
 * Edit the configuration file if desired (see below).
 * Launch without *BattlEye* so the module loads.
 
