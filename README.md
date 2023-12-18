@@ -6,7 +6,7 @@
 ![Features](https://i.imgur.com/uxSm4qF.png)
 
 # Installation and Usage Guide
-[YouTube](https://youtu.be/bgBJCmkwR7I)
+**See video: [YouTube](https://youtu.be/bgBJCmkwR7I)**
 
 # Installation
 * Download and extract the latest module from [Releases](https://github.com/DanielWillett/LevelObjectIcons/releases/) into your `Unturned/Modules` folder.
